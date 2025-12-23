@@ -1,0 +1,296 @@
+:root {
+  --bd-clr: #24263a;
+  --cont-bg-clr: white;
+  --card-clr: #5082bb2d;
+  --bar-clr1: #8526f3;
+  --bar-clr2: #d36b00;
+  --bar-clr3: #3367d1;
+  --font-clr-dark: black;
+  --icon-clr: #17121d;
+  --hover-clr: #c9cada;
+  --grd-clr1: #19376d;
+  --grd-clr2: #0b2447;
+  /*  ------input-----*/
+  --input-bg: #ffff;
+  --font-white: #2c2c2c;
+  --hover-input: #f4f4f4;
+}
+.dark_themes {
+  --bd-clr: #24263a;
+  --cont-bg-clr: #040414;
+  --card-clr: #1d1d3694;
+  --bar-clr1: #8925fd;
+  --bar-clr2: #f7b445;
+  --bar-clr3: #3367d1;
+  --font-clr-dark: white;
+  --icon-clr: #d8d8e9;
+  --hover-clr: #3c3f63;
+  --grd-clr1: #ff7e5f;
+  --grd-clr2: #db6e52;
+  /*  ------input-----*/
+  --input-bg: #2c2c2c;
+  --font-white: #ffff;
+  --hover-input: #3c3c3c;
+}
+@media only screen and (max-width: 1300px) {
+  /* <------div1--------> */
+  .div3 .form {
+    width: 80%;
+    height: 190vh;
+  }
+  /* <------div2--------> */
+  .card1 .total_res {
+    top: 150px;
+    right: 0px;
+  }
+  /* <------div3--------> */
+  .div2_container {
+    height: 80%;
+  }
+  .card4 .chart_4 {
+    width: 100%;
+    height: 100%;
+    margin: 30px auto;
+  }
+  .card4 .piechartyear {
+    top: 77px;
+  }
+  .card4 .year_pie {
+    top: 80px;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .card1 .total_res {
+    top: 130px;
+  }
+  /* <------div3--------> */
+  .card4 .piechartyear {
+    top: 97px;
+  }
+  .card4 .year_pie {
+    top: 100px;
+  }
+}
+@media only screen and (max-width: 900px) {
+  .scroll_container .div1 {
+    overflow-y: auto;
+  }
+  .div1::-webkit-scrollbar {
+    display: none;
+  }
+  .div1_container {
+    width: 100%;
+    height: 120vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(7, 1fr);
+    margin: auto;
+  }
+  .div1_container h5 {
+    font-size: 20px;
+  }
+  .div1_container .card1 {
+    grid-area: 1 / 1 / 3 / 2;
+  }
+  .card1 .total_res {
+    top: 70px;
+    right: 50px;
+  }
+  .div1_container .card2 {
+    grid-area: 3 / 1 / 5 / 2;
+  }
+  .card2 p {
+    margin-bottom: 10px;
+  }
+  .card2 .chart_2 {
+    width: 90%;
+    height: 80%;
+    margin: auto auto;
+  }
+  .div1_container .card3 {
+    grid-area: 5 / 1 / 8 / 2;
+    position: relative;
+  }
+  /* <------div3--------> */
+  .scroll_container .div2 {
+    overflow-y: auto;
+  }
+  .div2::-webkit-scrollbar {
+    display: none;
+  }
+  .div2_container {
+    height: 120vh;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .div2_container .card4 {
+    grid-area: 1 / 1 / 2 / 2;
+    width: 50%;
+  }
+  .div2_container .card5 {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .card4 .chart_4 {
+    width: 100%;
+    height: 80%;
+    margin: 0px auto;
+    padding-left: 0px;
+  }
+  .card4 .piechartyear {
+    top: 60px;
+  }
+  .card4 .year_pie {
+    top: 63px;
+  }
+}
+@media only screen and (max-width: 800px) {
+  /* <------div1--------> */
+  .div3 .form {
+    width: 100%;
+    height: 195vh;
+  }
+  .title_section h1 {
+    font-size: 20px;
+  }
+  .system_header {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: -50px;
+  }
+  .system_header.show_nav {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    background-color: var(--hover-clr);
+  }
+  .right_div i {
+    margin-right: 0px;
+  }
+  .right_div .menu {
+    display: block;
+    margin-right: 10px;
+  }
+  /* <------div2--------> */
+}
+@media only screen and (max-width: 600px) {
+  /* <------div1--------> */
+  .title_section h1 {
+    display: none;
+  }
+  .title_section .acro_name {
+    display: block;
+  }
+  .div3 .form {
+    width: 100%;
+    height: 278vh;
+  }
+  .form h3 {
+    font-size: 25px;
+  }
+  .form1 .respo_type {
+    flex-direction: column;
+  }
+  .form1 .row-2 {
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .checkbox_btn2 .row-2 input {
+    margin: auto;
+  }
+  .form1 .checkbox_btn {
+    flex-direction: column;
+  }
+  .cb_btn label {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+  .cb_btn input {
+    margin: auto 0px;
+  }
+  /* <------div2--------> */
+  .div1_container {
+    height: 150vh;
+  }
+  .div1_container h5 {
+    font-size: 18px;
+  }
+  .card1 .total_res {
+    top: 120px;
+    right: 20px;
+  }
+  /* <------div3--------> */
+  .div2_container .card4 {
+    grid-area: 1 / 1 / 2 / 2;
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 400px) {
+  /* <------div1--------> */
+  .div3 .form {
+    width: 100%;
+    height: 285vh;
+  }
+  .form h3 {
+    font-size: 20px;
+  }
+  .title_section .show_upload {
+    right: 5px;
+    top: 70px;
+  }
+  /* <------div2--------> */
+  .div1_container {
+    height: 160vh;
+  }
+  .div1_container h5 {
+    font-size: 18px;
+  }
+  .card1 .total_res {
+    top: 140px;
+    right: 5px;
+  }
+  .card2 .chart_2 {
+    width: 100%;
+    height: 70%;
+    margin: auto auto;
+  }
+  .div1_container .card3,
+  .div1_container .card2,
+  .div1_container .card1 {
+    padding: 5px;
+  }
+  .dropdown_wrap {
+    top: 35px;
+    right: 0px;
+  }
+  /* <------div3--------> */
+  .div2_container {
+    height: 150vh;
+  }
+  .div2_container .card4 {
+    grid-area: 1 / 1 / 2 / 2;
+    width: 100%;
+    padding: 5px;
+  }
+  .div2_container .card5 {
+    padding: 5px;
+  }
+  .card4 .chart_4 {
+    margin: 30px auto;
+  }
+  .dropdown_wrap_fb {
+    right: 30px;
+    top: 5px;
+    width: 100px;
+  }
+  .div2_container h5 {
+    font-size: 18px;
+  }
+  .dropdown_wrap_fb #analyzesenti {
+    width: 100px;
+  }
+}
