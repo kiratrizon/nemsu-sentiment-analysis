@@ -229,12 +229,12 @@ class ResearchDataController extends Controller {
                     rsdafto,
                     data_type: "new"
                 };
-                const insert = await ResearchData.create(fulldata);
                 
-                if (insert) {
-                    if (count > 1000) {
-                        break;
-                    } else {
+                if (count > 1000) {
+                    break;
+                } else {
+                    const insert = await ResearchData.create(fulldata);
+                    if (insert) {
                         count++;
                         uploaded++;
                     }
