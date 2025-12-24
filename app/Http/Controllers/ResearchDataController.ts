@@ -197,6 +197,13 @@ class ResearchDataController extends Controller {
             return redirect("/");
         }
         let uploaded = 0;
+        const store = Cache.store("research");
+        if (!(await store.has("insertData"))) {
+            await store.forever("insertData", 0);
+            await store.forever("insertDataTimestamp", date("Y-m-d 00:00:00"));
+        }
+                // Handle successful insert
+        let count = await store.get("insertData") as number;
         for (const row of rows) {
             const date_of_feedback = this.formatDate(row[0]);
             const type_of_client = row[1] as string;
@@ -223,16 +230,16 @@ class ResearchDataController extends Controller {
                     data_type: "new"
                 };
                 const insert = await ResearchData.create(fulldata);
+                
                 if (insert) {
-                    // Handle successful insert
-                    uploaded++;
+                    if (count > 1000) {
+                        break;
+                    } else {
+                        count++;
+                        uploaded++;
+                    }
                 }
             }
-        }
-        const store = Cache.store("research");
-        if (!(await store.has("insertData"))) {
-            await store.forever("insertData", 0);
-            await store.forever("insertDataTimestamp", date("Y-m-d 00:00:00"));
         }
         if (!uploaded) {
             request.session.flash("error", "No valid data uploaded.");
@@ -290,6 +297,11 @@ class ResearchDataController extends Controller {
             await store.forever("insertData", 0);
             await store.forever("insertDataTimestamp", date("Y-m-d 00:00:00"));
         }
+        const count = await store.get("insertData") as number;
+        if (count > 1000) {
+            request.session.flash("error", "Data upload limit reached for today.");
+            return redirect("/");
+        }
         const insert = await ResearchData.create({
             name: data.name,
             timestamp: date("Y-m-d H:i:s"),
@@ -304,7 +316,6 @@ class ResearchDataController extends Controller {
             rsdafto: data.rsdafto || 'none',
             data_type: "new"
         });
-
         if (insert) {
             request.session.flash("success", "Data uploaded successfully.");
             await store.increment("insertData");
