@@ -297,7 +297,7 @@ class Server {
 
     // initialize the app
     await this.loadAndValidateRoutes();
-    this.endInit();
+    await this.endInit();
   }
 
   private static async generateNewApp(
@@ -719,7 +719,7 @@ class Server {
     }
   }
 
-  private static endInit() {
+  private static async endInit() {
     this.app.notFound(async function (c: MyContext) {
       return await myError(c);
     });
@@ -735,6 +735,12 @@ class Server {
         });
       });
     });
+
+    try {
+      await import("../../../../../routes/console.ts")
+    } catch (_) {
+      // 
+    }
   }
 }
 

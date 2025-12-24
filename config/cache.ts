@@ -10,10 +10,8 @@ const constant: CacheConfig = {
     memory: {
       driver: "memory",
     },
-    myDB: {
-      driver: "database",
-      table: "cache",
-      connection: "mysql",
+    research: {
+      driver: "memory"
     }
   },
 };

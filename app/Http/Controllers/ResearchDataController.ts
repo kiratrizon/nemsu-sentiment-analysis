@@ -2,7 +2,7 @@ import Controller from "App/Http/Controllers/Controller.ts";
 import ResearchData from "../../Models/ResearchData.ts";
 import Sentiment from "sentiment";
 import * as XLSX from "xlsx";
-import {Validator} from "Illuminate/Support/Facades/index.ts"
+import {Cache, Validator} from "Illuminate/Support/Facades/index.ts"
 
 class ResearchDataController extends Controller {
 
@@ -229,11 +229,16 @@ class ResearchDataController extends Controller {
                 }
             }
         }
-
+        const store = Cache.store("research");
+        if (!(await store.has("insertData"))) {
+            await store.forever("insertData", 0);
+            await store.forever("insertDataTimestamp", date("Y-m-d 00:00:00"));
+        }
         if (!uploaded) {
             request.session.flash("error", "No valid data uploaded.");
         } else {
             request.session.flash("success", `${uploaded} data uploaded.`);
+            await store.increment("insertData", uploaded);
         }
         return redirect("/");
     }
@@ -280,7 +285,11 @@ class ResearchDataController extends Controller {
             "admin"
         ];
         const service_availed = servicesArr.filter(service => data[service]).join(';');
-
+        const store = Cache.store("research");
+        if (!(await store.has("insertData"))) {
+            await store.forever("insertData", 0);
+            await store.forever("insertDataTimestamp", date("Y-m-d 00:00:00"));
+        }
         const insert = await ResearchData.create({
             name: data.name,
             timestamp: date("Y-m-d H:i:s"),
@@ -298,6 +307,7 @@ class ResearchDataController extends Controller {
 
         if (insert) {
             request.session.flash("success", "Data uploaded successfully.");
+            await store.increment("insertData");
         } else {
             request.session.flash("error", "Failed to upload data.");
         }
