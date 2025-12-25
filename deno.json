@@ -9,6 +9,7 @@
     "@std/io": "jsr:@std/io@^0.225.2",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.17",
     "@vef/deno-memcached": "jsr:@vef/deno-memcached@^0.1.1",
+    "@xenova/transformers": "npm:@xenova/transformers@^2.17.2",
     "autoprefixer": "npm:autoprefixer@^10.4.22",
     "fast-xml-parser": "npm:fast-xml-parser@^5.3.2",
     "graphql": "npm:graphql@^16.12.0",
@@ -91,5 +92,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kiratrizon/deno-honovel.git"
+  },
+  "allowScripts": {
+    "allow": ["npm:esbuild@0.25.12", "npm:protobufjs@6.11.4", "npm:sharp@0.32.6"],
+    "deny": []
   }
 }

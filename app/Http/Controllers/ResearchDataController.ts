@@ -1,11 +1,25 @@
 import Controller from "App/Http/Controllers/Controller.ts";
 import ResearchData from "../../Models/ResearchData.ts";
-import Sentiment from "sentiment";
+import { pipeline } from "@xenova/transformers";
 import * as XLSX from "xlsx";
 import {Cache, Validator} from "Illuminate/Support/Facades/index.ts"
 
 class ResearchDataController extends Controller {
-
+    private readonly neutrals = [
+        "nothing",
+        "none",
+        "non",
+        "no comment",
+        "no comments",
+        ".",
+        "no",
+        "no complaints",
+        "no complaint",
+        "n/a",
+        "n\\a",
+        "na"
+    ];
+    private sentimentClassifier: any = null;
     public allTimeData: HttpDispatch = async ({request}) => {
         const old = await ResearchData.where("data_type", "old").get();
         const newData = await ResearchData.where("data_type", "new").get();
@@ -42,25 +56,21 @@ class ResearchDataController extends Controller {
         const newArr: Record<string, unknown>[] = [];
         const resultArr: Record<string, unknown>[][] = [];
 
-        oldData.forEach((row) => {
-            const sentiment = new Sentiment();
-            const result = sentiment.analyze(row.fodoti ?? '');
+        for (const row of oldData) {
+            const result = await this.analyzeSentiment(row.fodoti ?? '');
             row.forceFill({
-                sentiment: result.score
+                sentiment: result
             });
             oldArr.push(row.toObject());
-        });
+        }
 
-        resultArr.push()
-
-        newData.forEach((row) => {
-            const sentiment = new Sentiment();
-            const result = sentiment.analyze(row.fodoti ?? '');
+        for (const row of newData) {
+            const result = await this.analyzeSentiment(row.fodoti ?? '');
             row.forceFill({
-                sentiment: result.score
+                sentiment: result
             });
             newArr.push(row.toObject());
-        })
+        }
 
         resultArr.push(
              oldArr
@@ -78,7 +88,6 @@ class ResearchDataController extends Controller {
             year: "required",
             filtersenti: "required"
         }) as {year: string, filtersenti: "positive" | "negative" | "all" | "neutral"};
-        const analyzer = new Sentiment();
 
         const resultcomments = await ResearchData.where((query) => {
             query.where((subQuery) => {
@@ -93,49 +102,44 @@ class ResearchDataController extends Controller {
         let counter = 0;
         let commentarray: Record<string, unknown>[] = [];
 
-        resultcomments.forEach((row) => {
-            const output = analyzer.analyze(row.fodoti ?? '');
+        for (const row of resultcomments) {
+            const output = await this.analyzeSentiment(row.fodoti ?? '');
             switch (filtersenti) {
-                case "positive": {
-                    if (output.score > 0) {
+                case "positive":
+                    if (output > 0) {
                         row.forceFill({
-                            sentiment: output.score
+                            sentiment: output,
                         });
                     }
                     break;
-                }
-                case "negative": {
-                    if (output.score < 0) {
+                case "negative":
+                    if (output < 0) {
                         row.forceFill({
-                            sentiment: output.score
+                            sentiment: output,
                         });
                     }
                     break;
-                }
-                case "all": {
+                case "neutral":
+                    if (output === 0) {
+                        row.forceFill({
+                            sentiment: output
+                        });
+                    }
+                    break;
+                case "all":
                     row.forceFill({
-                        sentiment: output.score
+                        sentiment: output
                     });
                     break;
-                }
-                case "neutral": {
-                    if (output.score === 0) {
-                        row.forceFill({
-                            sentiment: output.score
-                        });
-                    }
-                    break;
-                }
             }
 
             commentarray.push(row.toObject());
             counter++;
-
             if (counter % 10 === 0) {
                 resultArrCom.push(commentarray);
-                commentarray = []; // Clear the array
+                commentarray = [];
             }
-        })
+        }
 
         resultArrCom.push(commentarray);
 
@@ -325,6 +329,27 @@ class ResearchDataController extends Controller {
 
         return redirect("/");
     }
+
+    private async analyzeSentiment(text: string) {
+        if (this.neutrals.includes(text.toLowerCase())) {
+            return 0; // NEUTRAL
+        }
+        if (!this.sentimentClassifier) {
+            this.sentimentClassifier = await pipeline(
+                "sentiment-analysis",
+                "Xenova/distilbert-base-uncased-finetuned-sst-2-english"
+            );
+        }
+        const result = await this.sentimentClassifier(text);
+        const label = result[0].label;
+
+        if (label === "POSITIVE") {
+            return 1; // POSITIVE
+        } else {
+            return -1; // NEGATIVE
+        }
+    }
+
 }
 
 export default ResearchDataController;
